@@ -41,7 +41,7 @@ class StrokeImageDataset(Dataset):
     def __getitem__(self, idx):
         img_path = os.path.join(self.img_dir, self.img_labels.iloc[idx, 0])
         image = read_image(img_path)
-        image = transforms.Resize((200, 200))(image)
+        image = transforms.Resize((150, 150))(image)
         image = transforms.Grayscale()(image)
         label = self.img_labels.iloc[idx, 1]
         if self.transform:
@@ -99,7 +99,7 @@ def main():
     # Defining model and training options
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print("Using device: ", device, f"({torch.cuda.get_device_name(device)})" if torch.cuda.is_available() else "")
-    model = MyViT((1, 200, 200), n_patches=100, n_blocks=2, hidden_d=3, n_heads=2, out_d=2).to(device)
+    model = MyViT((1, 150, 150), n_patches=50, n_blocks=2, hidden_d=4, n_heads=2, out_d=2).to(device)
     N_EPOCHS = 5
     LR = 0.005
 
@@ -276,3 +276,6 @@ class MyViTBlock(nn.Module):
         return out
 
 main()
+
+from sklearn.metrics import classification_report
+
